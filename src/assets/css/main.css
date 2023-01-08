@@ -1,0 +1,66 @@
+body {
+  padding: 0;
+  margin: 0;
+  width: 100vw;
+overflow: hidden;
+}
+
+html {
+  font-family: 黑体;
+  /* font-weight: bold; */
+}
+/* html {
+  overflow-y: scroll;
+}
+ 
+:root {
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+ 
+:root body {
+  position: absolute;
+} */
+
+/* @media only screen and (max-width: 1920px) {
+  html {
+      font-size: 100% !important;
+  }
+}
+
+@media only screen and (max-width: 1440px) {
+  html {
+      font-size: 75% !important;
+  }
+}
+
+@media only screen and (max-width: 1280px) {
+  html {
+      font-size: 66% !important;
+  }
+}
+
+@media only screen and (max-width: 1024px) {
+  html {
+      font-size: 53% !important;
+  }
+}
+
+@media only screen and (max-width: 960px) {
+  html {
+      font-size: 50% !important;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  html {
+      font-size: 40% !important;
+  }
+}
+
+@media only screen and (max-width: 375px) {
+  html {
+      font-size: 23% !important;
+  }
+} */
+
