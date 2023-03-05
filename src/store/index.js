@@ -5,10 +5,8 @@ Vue.use(Vuex)
 
 const state  =  {
 
-	userimg: '../../assets/img/个人_fill.png',
+	userimg: '../assets/img/个人_fill.png',
 	username: '暂未登录',
-
-  	windowwidth: 1080, // 当前屏幕宽度
 
 	newsongsheetid: '',//当前歌单id
 	newsonglist: [],//当前歌单列表
@@ -38,9 +36,8 @@ const actions = {
 	getuserimg(context, value) {
 		context.commit('GETUSERIMG', value)
 	},
-
- 	getwindowwidth(context, value) {
-		context.commit('GETWINDOWWIDTH', value)
+	getnewsingid(context, value) {
+		context.commit('GETNEWSINGID', value)
 	},
 	getnewsongsheetid(context, value) {
 		context.commit('GETNEWSONGSHEETID', value)
@@ -93,9 +90,8 @@ const mutations =  {
 	GETUSERNAME(state, value) {
 		state.username = value
 	},
-
-  	GETWINDOWWIDTH(state, value) {
-		state.windowwidth = value
+	GETNEWSINGID(state, value) {
+		state.newsingid = value
 	},
 	GETNEWSONGSHEETID(state, value) {
 		state.newsongsheetid = value

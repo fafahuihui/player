@@ -3,8 +3,7 @@
     <div class="songSheet-info">
       <img :src=songSheetData.coverImgUrl alt=""
         class="songSheet-info-songSheetImg">
-      <div class="songSheet-info-explain"
-          :style="{width: (windowwidth-480)+'px'}">
+      <div class="songSheet-info-explain">
           <div class="songSheet-info-explain-title">{{songSheetData.name}}</div>
           <div class="songSheet-info-explain-creatorInfo">
             <img :src=creatorHeadImg alt=""
@@ -82,7 +81,7 @@
       <div class="songSheet-songList-row1"
           v-for="(item, index) in songListData"
           :key="index"
-          @click="playSong(item.id, item.name, item.ar[0]['name'], item.al.picUrl, index)"
+          @click="playSongClick(item.id, item.name, item.ar[0]['name'], item.al.picUrl, index)"
           :class="{songSheetsongListrow1Active:newsongindex == index}">
         <div class="songSheet-songList-row1-song">
           {{item.name}}
@@ -123,9 +122,8 @@
 <script>
 import { mapState } from 'vuex'
 import { songSheet, songList, songSheetComment } from '@/api/home.js'
-import { musicUrl,songLyrics } from '@/api/songSheet.js'
 import store from "@/store/index.js";
-import audio from "@/utils/playSong.js"
+import { playSong } from '@/utils/play.js'
 import {tenThousand, timestampToTime} from '@/utils/dataConversion'
 export default {
   name: 'SongSheet',
@@ -157,52 +155,10 @@ export default {
     showClick() {
       this.showSign = !this.showSign
     },
-    playSong(id, songName, singerName, songImg, index){
-      songLyrics(id).then((res) => {
-      // console.log("res:",res)
-				this.songLyrics = res.lrc.lyric.split("\n").map((item)=> {
-					let temp = item.split(']')
-					let min = String(temp[0]).slice(1,3)
-					let sec = String(temp[0]).slice(4,6)
-					let time = parseInt(min)*60 + parseInt(sec)
-					let lrc = String(temp[1]).slice(0,item.length)
-					if(lrc != "") {
-						return {time, lrc}
-					}else{
-						return " "
-					}
-				})
-        
-				store.commit('GETNEWSONGLYRICS',this.songLyrics)
-			})
-      musicUrl(id).then((res)=>{
-        this.songUrl = res.data[0].url      
-        store.commit('GETNEWSONGURL', this.songUrl)
-      })
-      setTimeout(()=> {
-        audio.src = this.songUrl
-      },500)
-      
-      console.log('singerName:',singerName)
-      console.log('songImg:',songImg)
-      store.commit('GETNEWSONGNAME', songName)
-      store.commit('GETNEWSINGERNAME', singerName)
-      store.commit('GETNEWSONGINDEX', index)
-      store.commit('GETNEWSONGIMG', songImg)
-      // console.log('this.plagsign:',this.plagsign)
-      // console.log('!this.plagsign:',!this.plagsign)
-      // store.commit('GETPLAYSIGN', true)
-      
-      setTimeout(()=> {
-        store.commit('GETPLAYSIGN', false)
-      },500)
-      setTimeout(()=> {
-        store.commit('GETPLAYSIGN', true)
-      },500)
-      
-      console.log('songsheet')
-      audio.play()
-    }
+
+    playSongClick(id, songName, singerName, songImg, index) {
+      playSong(id, songName, singerName, songImg, index)
+    },
   },
   computed: {
     ...mapState(['windowwidth', 'plagsign','newsongindex', 'newsongsheetid'])
@@ -225,34 +181,13 @@ export default {
       // console.log(this.songSheetCommentData)
     })
   },
-  
-  // beforeRouteEnter(to, from, next) {
-  //   console.log('to:',to)
-  //   console.log('from:',from)
-  //   console.log('this.$router:',this.$router)
-    // if(to.name == "songSheet") {
-      // if(to.params == {}) {
-      //   this.$router.push({
-      //   name: 'songSheet',
-      //   params: {
-      //     id:this.$store.state.pathmsg 
-      //   }
-      // })
-      
-      // }
-    // }
-    // next();
-  // },
 }
 </script>
 
 <style lang="scss" scoped>
 .songSheet-info {
-  // border: 1px solid pink;
   display: flex;
-  // justify-content: space-between;
   &-songSheetImg {
-    // border: 1px solid pink;
     height: 180px;
     width: 180px;
     margin-right: 20px;
@@ -260,20 +195,16 @@ export default {
     border-radius: 6px;
   }
   &-explain {
-    // border: 1px solid red;
-    // min-width: 560px;
     &-title {
       font-size: 20px;
       font-weight: bolder;
       margin-bottom: 10px;
     }
     &-creatorInfo {
-      // border: 1px solid red;
       height: 32px;
       display: flex;
       margin-bottom: 10px;
       &-img {
-        // border: 1px solid pink;
         height: 30px;
         width: 30px;
         display: inline-block;
@@ -293,10 +224,8 @@ export default {
       }
     }
     &-operationRow {
-      // border: 1px solid pink;
       display: flex;
       &-play {
-        // border: 1px solid pink;
         height: 30px;
         padding-left: 20px;
         padding-right: 20px;
@@ -348,15 +277,12 @@ export default {
     &-briefIntroductionRow {
       display: flex;
       justify-content: space-between;
-      // border: 1px solid pink;
       &-img {
         width: 20px;
         height: 20px;
         display: inline-block;
-        // border: 1px solid pink;
       }
       &-txt {
-        // border: 1px solid blue;
       }
     }
   }
@@ -366,7 +292,6 @@ export default {
   overflow: hidden;
 }
 .songSheet-column {
-  // border: 1px solid pink;
   margin-top: 30px;
   display: flex;
   height: 30px;
@@ -382,35 +307,29 @@ export default {
 }
 
 .songSheet-songList {
-  // border: 1px solid pink;
   margin-top: 10px;
   &-row {
-    // border: 1px solid red;
     height: 30px;
     display: flex;
     &-song {
-      // border: 1px solid red;
       width: 32%;
       font-size: 14px;
       color: gray;
       line-height: 30px;
     }
     &-singer {
-      // border: 1px solid red;
       width: 24%;
       font-size: 14px;
       color: gray;
       line-height: 30px;
     }
     &-album {
-      // border: 1px solid red;
       width: 24%;
       font-size: 14px;
       color: gray;
       line-height: 30px;
     }
     &-time {
-      // border: 1px solid red;
       width: 20%;
       font-size: 14px;
       color: gray;
@@ -421,39 +340,30 @@ export default {
     background-color: #EEEEEE;
   }
   &-row1 {
-    // border: 1px solid red;
     height: 30px;
     display: flex;
     color: gray;
     &-song {
-      // border: 1px solid red;
       width: 32%;
       font-size: 14px;
-      // color: gray;
       line-height: 30px;
       overflow: hidden;
     }
     &-singer {
-      // border: 1px solid red;
       width: 24%;
       font-size: 14px;
-      // color: gray;
       line-height: 30px;
       overflow: hidden;
     }
     &-album {
-      // border: 1px solid red;
       width: 24%;
       font-size: 14px;
-      // color: gray;
       line-height: 30px;
       overflow: hidden;
     }
     &-time {
-      // border: 1px solid red;
       width: 20%;
       font-size: 14px;
-      // color: gray;
       line-height: 30px;
       overflow: hidden;
     }
@@ -465,7 +375,6 @@ export default {
 }
 .songSheet-comment {
   &-row {
-    // border: 1px solid pink;
     margin-top: 15px;
     border-bottom: 1px solid #DEDEDE;
     &-info {

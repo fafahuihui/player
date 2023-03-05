@@ -16,8 +16,6 @@ export function request(config) {
 
     // 拦截请求
     instance.interceptors.response.use(data => {
-        // console.log(data.data);
-        // console.log('222')
         return data.data
     })
     return instance(config)
